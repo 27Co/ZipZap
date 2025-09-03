@@ -38,21 +38,25 @@ z() {
                 # it means key is not provided
                 [ -z "$newKey" ] && echo "invalid key" && return 1
                 [ -d "$newKey" ] && echo "missing key" && return 1
-                # add if new
-                if [ -z "${ZZ_MAPS[$newKey]}" ]; then # indeed new
-                    # check target
-                    if [ -z "$1" ] || [ ! -d "$1" ]; then
-                        echo "z: invalid target directory [$1]"
-                        return 1
-                    fi
-                    echo "$newKey=$1" >> maps.txt # for future
-                    ZZ_MAPS[$newKey]=$1   # for current session
-                    echo "Added mapping: $newKey -> $1"
-                    # if returning here, not cd-ing this time
-                    # use another `z <key>` to go there
-                    #return
+                # check target
+                if [ -z "$1" ] || [ ! -d "$1" ]; then
+                    echo "z: invalid target directory [$1]"
+                    return 1
                 fi
-                # TODO: modify existing mapping
+
+                if [ -n "${ZZ_MAPS[$newKey]}" ]; then # exists
+                    # remove the entry from maps.txt
+                    grep -v "^$newKey=" maps.txt > maps.tmp
+                    mv maps.tmp maps.txt
+                fi
+
+                echo "$newKey=$1" >> maps.txt # for future
+                ZZ_MAPS[$newKey]=$1   # for current session
+                echo "Added mapping: $newKey -> $1"
+
+                # if returning here, not cd-ing this time
+                # use another `z <key>` to go there
+                #return
                 ;;
             h)
                 echo "Usage: z [shortcut/directory]"
