@@ -1,10 +1,17 @@
 # Usage: z <shortcut>
-# Reads maps.txt
-
 # TODO: rename z to zi and za
 
 declare -A ZZ_MAPS
+
 ZZ_PREV_DIR=$PWD
+
+ZZ_MAPS_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/zipzap
+mkdir -p $ZZ_MAPS_DIR
+
+ZZ_MAPS_FILE=$ZZ_MAPS_DIR/maps.txt
+[ ! -f "$ZZ_MAPS_FILE" ] && touch "$ZZ_MAPS_FILE"
+
+ZZ_CACHE_FILE=${XDG_CACHE_HOME:-$HOME/.cache}/zz_cache.txt
 
 # load mappings once
 while IFS='=' read -r key value; do
@@ -17,7 +24,7 @@ while IFS='=' read -r key value; do
     esac
     ZZ_MAPS[$key]=$value
     #echo "loaded: $key -> $value"
-done < maps.txt
+done < $ZZ_MAPS_FILE
 
 # similar to cd
 # supports shortcut to go to mapped directories
@@ -40,14 +47,14 @@ z() {
                 fi
 
                 if [ -n "${ZZ_MAPS[$newKey]}" ]; then # exists
-                    # remove the entry from maps.txt
-                    grep -v "^$newKey=" maps.txt > maps.tmp
-                    mv maps.tmp maps.txt
+                    # remove the entry from $ZZ_MAPS_FILE
+                    grep -v "^$newKey=" $ZZ_MAPS_FILE > maps.tmp
+                    mv maps.tmp $ZZ_MAPS_FILE
                 fi
 
                 # expand to full path
                 local fullPath=$(cd "$1" && pwd)
-                echo "$newKey=$fullPath" >> maps.txt # for future
+                echo "$newKey=$fullPath" >> $ZZ_MAPS_FILE # for future
                 ZZ_MAPS[$newKey]=$fullPath   # for current
                 echo "Added mapping: $newKey -> $fullPath"
 
