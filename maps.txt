@@ -1,2 +1,3 @@
 270=/home/bumblebee/Documents/UMich/eecs270
 280=goto.sh
+pic=/home/bumblebee/Pictures
