@@ -13,11 +13,11 @@ ZZ_PREV_DIR=$PWD
 
 # load mappings once
 while IFS='=' read -r key value; do
-    if [ -z $key ] || [ -z $value ] || [ ! -d $value ]; then
+    if [ -z "$key" ] || [ -z "$value" ] || [ ! -d "$value" ]; then
         echo "invalid key or directory: $key=$value"
         continue
     fi
-    case $key in
+    case "$key" in  # not tested
         \#*) continue ;; # skip comments
     esac
     ZZ_MAPS[$key]=$value
@@ -36,12 +36,12 @@ z() {
                 local newKey=$OPTARG
                 # if a directory is taken as OPTARG,
                 # it means key is not provided
-                [ -z $newKey ] && echo "invalid key" && return 1
-                [ -d $newKey ] && echo "missing key" && return 1
+                [ -z "$newKey" ] && echo "invalid key" && return 1
+                [ -d "$newKey" ] && echo "missing key" && return 1
                 # add if new
-                if [ -z ${ZZ_MAPS[$newKey]} ]; then # indeed new
+                if [ -z "${ZZ_MAPS[$newKey]}" ]; then # indeed new
                     # check target
-                    if [ -z $1 ] || [ ! -d $1 ]; then
+                    if [ -z "$1" ] || [ ! -d "$1" ]; then
                         echo "z: invalid target directory [$1]"
                         return 1
                     fi
@@ -76,7 +76,7 @@ z() {
     if [ $# -eq 0 ]; then
         ZZ_PREV_DIR=$PWD; cd
     elif [ $# -eq 1 ]; then
-        [ -d $1 ] && ZZ_PREV_DIR=$PWD && cd $1 && return
+        [ -d "$1" ] && ZZ_PREV_DIR=$PWD && cd $1 && return
         local there=${ZZ_MAPS[$1]}
         [ -n "$there" ] && ZZ_PREV_DIR=$PWD && cd $there && return
         echo "no such key or directory: $1"; return 1
