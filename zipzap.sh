@@ -1,11 +1,6 @@
 # Usage: z <shortcut>
 # Reads maps.txt
 
-# TODO: modify exiting mapping
-# currently, -a an existing key does nothing
-# because it doesn't enter the if block
-# should add else
-
 # TODO: rename z to zi and za
 
 declare -A ZZ_MAPS
@@ -50,9 +45,11 @@ z() {
                     mv maps.tmp maps.txt
                 fi
 
-                echo "$newKey=$1" >> maps.txt # for future
-                ZZ_MAPS[$newKey]=$1   # for current session
-                echo "Added mapping: $newKey -> $1"
+                # expand to full path
+                local fullPath=$(cd "$1" && pwd)
+                echo "$newKey=$fullPath" >> maps.txt # for future
+                ZZ_MAPS[$newKey]=$fullPath   # for current
+                echo "Added mapping: $newKey -> $fullPath"
 
                 # if returning here, not cd-ing this time
                 # use another `z <key>` to go there
