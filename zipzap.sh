@@ -1,6 +1,3 @@
-# Usage: z <shortcut>
-# TODO: rename z to zi and za
-
 declare -A ZZ_MAPS
 
 ZZ_PREV_DIR=$PWD
@@ -16,7 +13,7 @@ ZZ_CACHE_FILE=${XDG_CACHE_HOME:-$HOME/.cache}/zz_cache.txt
 # load mappings once
 while IFS='=' read -r key value; do
     if [ -z "$key" ] || [ -z "$value" ] || [ ! -d "$value" ]; then
-        echo "invalid key or directory: $key=$value"
+        echo "zz: Invalid key or directory: $key=$value"
         continue
     fi
     case "$key" in  # not tested
@@ -29,7 +26,7 @@ done < $ZZ_MAPS_FILE
 # similar to cd
 # supports shortcut to go to mapped directories
 # Note: there should not be spaces in keys or directories
-z() {
+zi() {
     # parse options
     while getopts ":ha:" opt; do
         case $opt in
@@ -38,11 +35,11 @@ z() {
                 local newKey=$OPTARG
                 # if a directory is taken as OPTARG,
                 # it means key is not provided
-                [ -z "$newKey" ] && echo "invalid key" && return 1
-                [ -d "$newKey" ] && echo "missing key" && return 1
+                [ -z "$newKey" ] && echo "zz: Invalid key" && return 1
+                [ -d "$newKey" ] && echo "zz: Missing key" && return 1
                 # check target
                 if [ -z "$1" ] || [ ! -d "$1" ]; then
-                    echo "z: invalid target directory [$1]"
+                    echo "zz: Invalid target directory [$1]"
                     return 1
                 fi
 
@@ -56,7 +53,7 @@ z() {
                 local fullPath=$(cd "$1" && pwd)
                 echo "$newKey=$fullPath" >> $ZZ_MAPS_FILE # for future
                 ZZ_MAPS[$newKey]=$fullPath   # for current
-                echo "Added mapping: $newKey -> $fullPath"
+                echo "zz: Added mapping: $newKey -> $fullPath"
 
                 # if returning here, not cd-ing this time
                 # use another `z <key>` to go there
@@ -67,11 +64,11 @@ z() {
                 return 0
                 ;;
             :)
-                echo "z: Option -$OPTARG requires an argument."
+                echo "zz: Option -$OPTARG requires an argument."
                 return 1
                 ;;
             \?)
-                echo "z: Invalid option: -$OPTARG"
+                echo "zz: Invalid option: -$OPTARG"
                 return 1
                 ;;
 
@@ -87,12 +84,12 @@ z() {
         [ -d "$1" ] && ZZ_PREV_DIR=$PWD && cd $1 && return
         local there=${ZZ_MAPS[$1]}
         [ -n "$there" ] && ZZ_PREV_DIR=$PWD && cd $there && return
-        echo "no such key or directory: $1"; return 1
+        echo "zz: No such key or directory: $1"; return 1
     else
-        echo "z: too many arguments"; return 1
+        echo "zz: Too many arguments"; return 1
     fi
 }
 
-zz() {
+za() {
     cd $ZZ_PREV_DIR
 }

@@ -1,48 +1,45 @@
+# ZipZap around directories
+
 ### Usage
 
-cd-like features:
+`zi <key>` takes you to the directory associated with `<key>`.
 
-`z <key>` takes you to the directory associated with `<key>`.
+`zi <directory>` changes to `<directory>`
 
-`z <directory>` changes to `<directory>`
+plain `zi` changes to the home directory.
 
-plain `z` changes to the home directory.
+`za` changes to the previous directory.
 
-`zz` changes to the previous directory.
-
-`z -a <key> <directory>`:
+`zi -a <key> <directory>`:
 
 - adds this map to data base
 - changes to `<directory>`
 
 ### Error handling
 
-`z pic` with pic not mapped yet will give
+`zi pic` with pic not mapped yet will give
 ```
-no such key or directory: pic
-```
-
-`z -a pic` with pic not mapped yet will give
-```
-z: invalid target directory []
+zz: No such key or directory: pic
 ```
 
-`z -a` will give
+`zi -a pic` with pic not mapped yet will give
 ```
-z: Option -a requires an argument.
+zz: Invalid target directory []
+```
+
+`zi -a` will give
+```
+zz: Option -a requires an argument.
 ```
 handled by `getopts` loop
 
 note that double quotes are needed in `[ -n "$there" ]`, cuz `test -n ` will return true but `test -n ""` will return false
 
-TODO: modify exiting mapping
+and other
 
-currently, `-a` an existing key does nothing
-which means it doesn't check if followed by a directory either
+### TODOs
 
-because it doesn't enter the if block
-should add else
-
-TODO: rename to zi and za
-
-TODO: zz should now allow arguments
+- function `zl` to load data after file is modified by user
+- za should not allow arguments
+- `zi -l` to list all mappings
+- `zi -d <key>` to delete a mapping
