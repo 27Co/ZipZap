@@ -1,6 +1,17 @@
 # ZipZap around directories
 
-### Usage
+## Installation
+
+### Manual
+
+1. Clone this repository somewhere, say, `~/.zsh/ZipZap`
+2. Add the following line to your `.zshrc`:
+
+   ```zsh
+   source ~/.zsh/ZipZap/zipzap.sh
+   ```
+
+## Usage
 
 `zi <key>` takes you to the directory associated with `<key>`.
 
@@ -15,29 +26,33 @@ plain `zi` changes to the home directory.
 - adds this map to data base
 - changes to `<directory>`
 
-### Error handling
+## Error handling
 
 `zi pic` with pic not mapped yet will give
+
 ```
 zz: No such key or directory: pic
 ```
 
 `zi -a pic` with pic not mapped yet will give
+
 ```
 zz: Invalid target directory []
 ```
 
 `zi -a` will give
+
 ```
 zz: Option -a requires an argument.
 ```
+
 handled by `getopts` loop
 
 note that double quotes are needed in `[ -n "$there" ]`, cuz `test -n ` will return true but `test -n ""` will return false
 
 and other
 
-### TODOs
+## TODOs
 
 - function `zl` to load data after file is modified by user
 - za should not allow arguments
